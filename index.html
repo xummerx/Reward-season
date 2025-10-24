@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaWin Rewards Season</title>
+    <style>
+        /* Base Reset */
+        body, html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #121212;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+
+        /* Ad Container */
+        .metawin-ad {
+            width: 500px;
+            height: 281px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            border: 2px solid #8A2BE2;
+        }
+
+        /* Background GIF */
+        .ad-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* Text Overlay */
+        .ad-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.95) 100%);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            
+            /* --- 布局修改: 减少内边距以修复拥挤 --- */
+            padding: 12px 20px; 
+            box-sizing: border-box;
+        }
+
+        /* ========================================
+        == 新动画: 循环、淡入、震动、淡出 ==
+        ======================================== */
+        @keyframes cycleInShakeOut {
+            /* 1. FADE IN (0% -> 10%) */
+            0%   { opacity: 0; transform: translateY(10px); }
+            10%  { opacity: 1; transform: translateY(0); }
+            
+            /* 2. SHAKE (10.5% -> 12.5%) - 震动效果 */
+            10.5% { transform: translate(3px, 1px) rotate(0.5deg); }
+            11%   { transform: translate(-3px, -1px) rotate(-0.5deg); }
+            11.5% { transform: translate(2px, 1px) rotate(0.5deg); }
+            12%   { transform: translate(-2px, -1px) rotate(-0.5deg); }
+            12.5% { transform: translate(0, 0) rotate(0); } /* 稳定 */
+
+            /* 3. HOLD (12.5% -> 85%) - 保持显示 */
+            85%   { opacity: 1; transform: translate(0, 0); }
+
+            /* 4. FADE OUT (85% -> 100%) - 为下一次循环准备 */
+            100%  { opacity: 0; transform: translateY(10px); }
+        }
+
+        /* (原有的Glow动画保持不变) */
+        @keyframes cyberGlow {
+            0% { text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 20px #8A2BE2; }
+            50% { text-shadow: 0 0 8px #00FFFF, 0 0 15px #00FFFF, 0 0 25px #00FFFF, 0 0 35px #8A2BE2; }
+            100% { text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 20px #8A2BE2; }
+        }
+        @keyframes pulseGreen {
+            0% { color: #00FF00; text-shadow: 0 0 5px #00FF00; }
+            50% { color: #32CD32; text-shadow: 0 0 10px #32CD32; }
+            100% { color: #00FF00; text-shadow: 0 0 5px #00FF00; }
+        }
+        @keyframes buttonTextGlow {
+            0% { text-shadow: 0 0 3px #fff; }
+            50% { text-shadow: 0 0 8px #fff, 0 0 12px #FFD700; }
+            100% { text-shadow: 0 0 3px #fff; }
+        }
+        /* ======================================== */
+
+
+        /* Header - Logo */
+        .ad-header {
+            width: 100%;
+            text-align: left;
+        }
+
+        .ad-logo {
+            /* --- 布局修改: 缩小Logo --- */
+            width: 140px; 
+            height: auto;
+            filter: drop-shadow(0 0 5px rgba(0,255,0,0.5));
+            
+            /* --- 动画修改: 应用新循环 --- */
+            opacity: 0; /* 初始隐藏 */
+            /* 动画: [名称] [时长] [循环] [缓动] [延迟] */
+            /* 8秒循环, -7.8s的负延迟 = 第一次播放时0.2s后出现 */
+            animation: cycleInShakeOut 8s infinite ease-out -7.8s;
+        }
+
+        /* Content - Main Selling Points */
+        .ad-content {
+            text-align: center;
+            /* --- 布局修改: 移除transform, 节省空间 --- */
+        }
+
+        .main-headline {
+            /* --- 布局修改: 减小字体 --- */
+            font-size: 28px; 
+            font-weight: 800;
+            color: #00FFFF;
+            margin: 0;
+            line-height: 1.2;
+            
+            /* --- 动画修改: 组合循环 --- */
+            opacity: 0;
+            /* 组合动画: [动画1], [动画2] */
+            animation: 
+                cycleInShakeOut 8s infinite ease-out -7.3s, /* 0.7s 延迟 */
+                cyberGlow 2s infinite alternate -7.3s;
+        }
+
+        .sub-headline {
+            /* --- 布局修改: 减小字体和间距 --- */
+            font-size: 17px; 
+            font-weight: 600;
+            color: #00FF00;
+            margin: 3px 0 0 0; /* 减小顶部间距 */
+
+            /* --- 动画修改: 组合循环 --- */
+            opacity: 0;
+            animation:
+                cycleInShakeOut 8s infinite ease-out -6.8s, /* 1.2s 延迟 */
+                pulseGreen 1.5s infinite alternate -6.8s;
+        }
+        
+        .rtp-compare {
+            /* --- 布局修改: 减小字体和间距 --- */
+            font-size: 13px;
+            color: #BBBBBB;
+            margin-top: 3px; /* 减小顶部间距 */
+            
+            /* --- 动画修改: 应用新循环 --- */
+            opacity: 0;
+            animation: cycleInShakeOut 8s infinite ease-out -6.3s; /* 1.7s 延迟 */
+        }
+        .rtp-compare .vegas {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        /* Footer - Features and CTA */
+        .ad-footer {
+            text-align: center;
+        }
+
+        .features {
+            display: flex;
+            /* --- 布局修改: 强制不换行, 均分宽度 --- */
+            justify-content: space-between;
+            width: 100%;
+            font-size: 12px; /* 减小字体 */
+            margin-bottom: 10px; /* 减小按钮间距 */
+        }
+
+        .features span {
+            color: #EEEEEE;
+            /* --- 布局修改: 移除 basis 和 wrap --- */
+            
+            /* --- 动画修改: 应用新循环 --- */
+            opacity: 0; 
+            animation: cycleInShakeOut 8s infinite ease-out;
+        }
+
+        /* --- 动画修改: 为3个feature设置不同的负延迟 --- */
+        .features span:nth-child(1) {
+            animation-delay: -5.8s; /* 2.2s 延迟 */
+        }
+        .features span:nth-child(2) {
+            animation-delay: -5.5s; /* 2.5s 延迟 */
+        }
+        .features span:nth-child(3) {
+            animation-delay: -5.2s; /* 2.8s 延迟 */
+        }
+        
+        .features strong {
+            color: #FFD700;
+            font-weight: 700;
+        }
+
+        .cta-button {
+            display: inline-block;
+            /* --- 布局修改: 减小padding和字体 --- */
+            padding: 11px 25px;
+            font-size: 17px;
+            font-weight: 700;
+            color: #ffffff;
+            background: linear-gradient(45deg, #A020F0, #8A2BE2);
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            
+            /* --- 动画修改: 组合循环 (压轴登场) --- */
+            opacity: 0;
+            animation:
+                cycleInShakeOut 8s infinite ease-out -4.7s, /* 3.3s 延迟 */
+                buttonTextGlow 2s infinite alternate -4.7s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 25px rgba(160, 32, 240, 0.8);
+            background: linear-gradient(45deg, #B22222, #DC143C);
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="metawin-ad">
+        <img src="skel.gif" class="ad-bg" alt="MetaWin Casino Character">
+
+        <div class="ad-overlay">
+            
+            <div class="ad-header">
+                <img src="metawin.png" class="ad-logo" alt="MetaWin Logo">
+            </div>
+
+            <div class="ad-content">
+                <h1 class="main-headline">METAWIN REWARDS SEASON IS LIVE</h1>
+                <h2 class="sub-headline">ZERO HOUSE EDGE (98%-100% RTP)</h2>
+                <p class="rtp-compare">
+                    <span class="vegas">Las Vegas RTP: 93%</span>
+                </p>
+            </div>
+
+            <div class="ad-footer">
+                <div class="features">
+                    <span><strong>10%</strong> INSTANT Rakeback (Every 30 mins)</span>
+                    <span><strong>40%</strong> DAILY Cashback (Every 24 hours)</span>
+                    <span><strong>~16%</strong> RankUP Bonuses</span>
+                </div>
+                <a href="https://metawin.com/xummer/" target="_blank" class="cta-button">PLAY NOW FOR 66%+ BACK!</a>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
